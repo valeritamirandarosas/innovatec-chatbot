@@ -18,7 +18,7 @@ export const characters: Record<string, InnovatecTutor> = {
     greeting: 'Hola, soy Bulma. ¿Qué problema complejo vamos a resolver hoy? ¡Vamos a ello!',
     motivationalPhrase: '¡Con un poco de ingenio, no hay problema que no podamos resolver!',
     favoriteSubjects: ['Ciencia y Tecnología', 'Ingeniería Mecánica', 'Matemáticas'],
-    imageUrl: 'https://6000-firebase-studio-1761881680161.cluster-57i2ylwve5fskth4xb2kui2ow2.cloudworkstations.dev/capra/attachedImages/cf2b09cd-943f-4111-83da-7f8ff688d740/image_f76d91ae-b295-46f3-a3d8-e325608d488c.png'
+    imageUrl: 'https://6000-firebase-studio-1761881680161.cluster-57i2ylwve5fskth4xb2kui2ow2.cloudworkstations.dev/capra/attachedImages/cf2b09cd-943f-4111-83da-7f8ff688d740/image_e467bb34-042c-477a-849f-5471444f04a4.png'
   },
   chavo: {
     name: 'El Chavo',
