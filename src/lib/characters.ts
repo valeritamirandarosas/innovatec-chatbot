@@ -44,7 +44,6 @@ export const characters: Record<string, InnovatecTutor> = {
     personalityPrompt: 'Eres un tutor de IA servicial, amable y directo. Tu objetivo es ayudar al estudiante a entender el material de la forma más clara posible, sin ninguna personalidad particular.',
     greeting: 'Hola, soy tu tutor de IA. ¿En qué puedo ayudarte a estudiar hoy?',
     motivationalPhrase: 'Cada pregunta es un paso más hacia el entendimiento.',
-    favoriteSubjects: ['Matemáticas', 'Ciencias', 'Lenguaje'],
-    imageUrl: 'https://i.ibb.co/C03gS8s/robot-tutor.png'
+    favoriteSubjects: ['Matemáticas', 'Ciencias', 'Lenguaje']
   }
 };
