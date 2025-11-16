@@ -199,7 +199,9 @@ const ChatPanelComponent = forwardRef<ChatPanelRef, ChatPanelProps>(({
               >
                 {message.role === 'assistant' && (
                   <Avatar className="h-8 w-8">
-                     {character?.imageUrl && <AvatarImage src={character.imageUrl} alt={character.name}/>}
+                     {character?.imageUrl ? (
+                        <AvatarImage src={character.imageUrl} alt={character.name} />
+                     ) : null}
                     <AvatarFallback><Bot size={20} /></AvatarFallback>
                   </Avatar>
                 )}
