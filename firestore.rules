@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /users/{uid} {
+      // Allow any authenticated user to read user data for the leaderboard.
+      allow read: if request.auth != null;
+      // Allow owners to write to their own document.
+      allow write: if isOwner(uid);
+    }
+
+    match /sessions/{sid} {
+      // Allow owners to read and write their own session data.
+      allow read, write: if isOwner(get(/databases/$(database)/documents/sessions/$(sid)).data.uid);
+    }
+    
+    match /sessions/{sid}/messages/{mid} {
+      // Allow owners to read and write messages within their own sessions.
+      allow read, write: if isOwner(get(/databases/$(database)/documents/sessions/$(sid)).data.uid);
+    }
+
+    match /users/{uid}/bundles/{bid} {
+      // Allow owners to read and write their own learning bundles.
+      allow read, write: if isOwner(uid);
+    }
+
+    match /feedback/{id} {
+      // Anyone can submit feedback.
+      allow create: if true;
+      // Only authenticated users can read/update/delete feedback (for admin roles, in a real app).
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Server-side actions (like getLeaderboard) will use admin SDKs and bypass these rules.
+    // No explicit rule for leaderboard reads is needed on the client if it's handled server-side.
+  }
+}
