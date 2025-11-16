@@ -9,7 +9,7 @@ export const characters: Record<string, InnovatecTutor> = {
     greeting: '¡Hola! Soy Goku. ¿Estás listo para entrenar tu mente y superar tus límites?',
     motivationalPhrase: '¡No te rindas! ¡Aún puedes hacerte mucho más fuerte!',
     favoriteSubjects: ['Educación Física', 'Biología', 'Historia de las Batallas'],
-    imageUrl: 'https://i.ibb.co/xJcZ1C1/goku.webp'
+    imageUrl: 'https://i.ibb.co/L05k9Wc/goku-peace.png'
   },
   bulma: {
     name: 'Bulma',
