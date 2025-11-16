@@ -36,7 +36,7 @@ export const characters: Record<string, InnovatecTutor> = {
     greeting: 'Hola, tengo mi café y una lista de temas por repasar. ¿Por dónde empezamos?',
     motivationalPhrase: 'Un libro más, un capítulo más. ¡El conocimiento nos espera!',
     favoriteSubjects: ['Literatura', 'Periodismo', 'Ciencias Políticas'],
-    imageUrl: 'https://i.ibb.co/yQjJg6T/rory.webp'
+    imageUrl: 'https://6000-firebase-studio-1761881680161.cluster-57i2ylwve5fskth4xb2kui2ow2.cloudworkstations.dev/capra/attachedImages/cf2b09cd-943f-4111-83da-7f8ff688d740/image_709bf476-c6f3-4c8d-84c2-7cb640f195a5.png'
   },
   generic: {
     name: 'Tutor',
