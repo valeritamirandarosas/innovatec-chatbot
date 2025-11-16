@@ -7,7 +7,9 @@ import { z } from 'zod';
 
 // Define el esquema de entrada para la validación
 const RequestSchema = z.object({
-  character: z.any(),
+  character: z.any().refine(val => val != null, {
+    message: "Character is required.",
+  }),
   mode: z.string(),
   subject: z.string(),
   grade: z.number(),
