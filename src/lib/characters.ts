@@ -27,7 +27,7 @@ export const characters: Record<string, InnovatecTutor> = {
     greeting: '¡Hola! Se me chispoteó... ¿quieres que te ayude a estudiar? ¡Eso, eso, eso!',
     motivationalPhrase: 'No te preocupes si no entiendes, la cosa es no dejar de intentarlo.',
     favoriteSubjects: ['Juegos y Recreación', 'Historia', 'Artes'],
-    imageUrl: 'https://i.ibb.co/68Z3w8b/chavo.png'
+    imageUrl: 'https://6000-firebase-studio-1761881680161.cluster-57i2ylwve5fskth4xb2kui2ow2.cloudworkstations.dev/capra/attachedImages/cf2b09cd-943f-4111-83da-7f8ff688d740/image_016761b4-dc30-4441-b18d-066daf9f21d0.png'
   },
   rory: {
     name: 'Rory',
