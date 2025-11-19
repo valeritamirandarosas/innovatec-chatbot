@@ -9,10 +9,10 @@ import { PlayCircle } from 'lucide-react';
 const videoPlaceholder = PlaceHolderImages.find(p => p.id === 'video-thumbnail');
 const teamMembers = [
   {
-    name: 'Ana García',
-    role: 'Líder de Pedagogía',
-    quote: 'Transformamos la educación con cada línea de código.',
-    image: PlaceHolderImages.find(p => p.id === 'team-member-1'),
+    name: 'Andrés Berríos',
+    role: 'Creador',
+    image: null, // Se reemplaza por el video
+    videoUrl: 'https://www.youtube.com/embed/OiYKfTeUwW0?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=OiYKfTeUwW0&controls=0&showinfo=0'
   },
   {
     name: 'Carlos Rivas',
@@ -53,23 +53,39 @@ export function About() {
 
       <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
         {teamMembers.map((member, index) => (
-          <Card key={index} className="text-center">
-            <CardContent className="pt-6">
-              {member.image && (
-                 <Image
-                    src={member.image.imageUrl}
-                    alt={`Foto de ${member.name}`}
-                    data-ai-hint={member.image.imageHint}
-                    width={120}
-                    height={120}
-                    className="mx-auto mb-4 rounded-full"
-                 />
+          <Card key={index} className="text-center overflow-hidden">
+            <CardContent className="p-0 flex flex-col h-full">
+              {member.videoUrl ? (
+                <div className="relative w-full h-48 overflow-hidden">
+                  <iframe
+                    className="absolute top-1/2 left-1/2 w-[177.77%] h-full min-h-[100%] min-w-[177.77vh] transform -translate-x-1/2 -translate-y-1/2 scale-[0.8]"
+                    src={member.videoUrl}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              ) : member.image && (
+                <div className="flex justify-center pt-6">
+                   <Image
+                      src={member.image.imageUrl}
+                      alt={`Foto de ${member.name}`}
+                      data-ai-hint={member.image.imageHint}
+                      width={120}
+                      height={120}
+                      className="mx-auto mb-4 rounded-full"
+                   />
+                </div>
               )}
-              <h3 className="text-lg font-semibold">{member.name}</h3>
-              <p className="text-sm text-primary">{member.role}</p>
-              <p className="mt-2 text-muted-foreground italic">
-                &ldquo;{member.quote}&rdquo;
-              </p>
+              <div className="p-6 flex-grow">
+                <h3 className="text-lg font-semibold">{member.name}</h3>
+                <p className="text-sm text-primary">{member.role}</p>
+                {member.quote && (
+                    <p className="mt-2 text-muted-foreground italic">
+                        &ldquo;{member.quote}&rdquo;
+                    </p>
+                )}
+              </div>
             </CardContent>
           </Card>
         ))}
