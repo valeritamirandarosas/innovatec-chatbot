@@ -56,9 +56,9 @@ export function About() {
           <Card key={index} className="text-center overflow-hidden">
             <CardContent className="p-0 flex flex-col h-full">
               {member.videoUrl ? (
-                <div className="relative w-full h-48 overflow-hidden">
+                <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
                   <iframe
-                    className="absolute top-1/2 left-1/2 w-[177.77%] h-full min-h-[100%] min-w-[177.77vh] transform -translate-x-1/2 -translate-y-1/2 scale-[0.8]"
+                    className="absolute top-1/2 left-1/2 w-full h-[177.77%] transform -translate-x-1/2 -translate-y-1/2 scale-[1.5]"
                     src={member.videoUrl}
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -77,7 +77,7 @@ export function About() {
                    />
                 </div>
               )}
-              <div className="p-6 flex-grow">
+              <div className="p-6">
                 <h3 className="text-lg font-semibold">{member.name}</h3>
                 <p className="text-sm text-primary">{member.role}</p>
                 {member.quote && (
