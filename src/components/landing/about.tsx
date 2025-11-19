@@ -14,8 +14,8 @@ const teamMembers = [
     videoUrl: 'https://www.youtube.com/embed/OiYKfTeUwW0?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=OiYKfTeUwW0&controls=0&showinfo=0'
   },
   {
-    name: 'Fernanda Berrios',
-    role: 'Ingeniero de IA',
+    name: 'Fernanda Peducase',
+    role: 'Creadora',
     videoUrl: 'https://www.youtube.com/embed/fpyD2YJTIwE?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=fpyD2YJTIwE&controls=0&showinfo=0',
   },
   {
