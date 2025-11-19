@@ -11,14 +11,12 @@ const teamMembers = [
   {
     name: 'Andrés Berríos',
     role: 'Creador',
-    image: null, // Se reemplaza por el video
     videoUrl: 'https://www.youtube.com/embed/OiYKfTeUwW0?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=OiYKfTeUwW0&controls=0&showinfo=0'
   },
   {
-    name: 'Carlos Rivas',
+    name: 'Fernanda Berrios',
     role: 'Ingeniero de IA',
-    quote: 'La inteligencia artificial es la nueva tiza del siglo XXI.',
-    image: PlaceHolderImages.find(p => p.id === 'team-member-2'),
+    videoUrl: 'https://www.youtube.com/embed/fpyD2YJTIwE?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=fpyD2YJTIwE&controls=0&showinfo=0',
   },
   {
     name: 'Sofía Mendoza',
