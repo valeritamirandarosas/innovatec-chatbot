@@ -19,9 +19,10 @@ const teamMembers = [
     videoUrl: 'https://www.youtube.com/embed/fpyD2YJTIwE?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=fpyD2YJTIwE&controls=0&showinfo=0',
   },
   {
-    name: 'Esperanza Dekeyser',
-    role: 'Creadora',
-    videoUrl: 'https://www.youtube.com/embed/Y6x8HP7TpM0?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=Y6x8HP7TpM0&controls=0&showinfo=0',
+    name: 'Sofia Mendoza',
+    role: 'Diseñadora de Experiencias',
+    quote: 'La mejor interfaz es la que no se nota, solo se siente.',
+    image: PlaceHolderImages.find(p => p.id === 'team-member-3'),
   },
 ];
 
