@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { SetupPanel } from '@/components/study/setup-panel';
 import { StatsPanel } from '@/components/study/stats-panel';
 import { ChatPanel, type ChatPanelRef } from '@/components/study/chat-panel';
-import { useAuth } from '@/firebase/client-provider';
 import type { Bundle, Character, Mode, InnovatecUser, InnovatecTutor } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, AtomIcon } from 'lucide-react';
 import { BundleDisplay } from '@/components/study/bundle-display';
-import { db } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp, increment, Timestamp } from 'firebase/firestore';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { CircuitBoardIcon, CogIcon, SqrtIcon } from '@/components/icons';
 import { characters } from '@/lib/characters';
@@ -26,7 +26,8 @@ const isSameDay = (d1: Date, d2: Date) => {
 }
 
 export default function StudyPage() {
-  const { user, loading: authLoading } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const router = useRouter();
   const { toast } = useToast();
   const chatPanelRef = React.useRef<ChatPanelRef>(null);
@@ -45,6 +46,24 @@ export default function StudyPage() {
   const [aiModel, setAiModel] = useState<string>(AI_MODELS[0].value);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedBundle, setGeneratedBundle] = useState<Bundle | null>(null);
+
+
+  useEffect(() => {
+    if (auth) {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+        } else {
+          router.push('/login');
+        }
+        setAuthLoading(false);
+      });
+      return () => unsubscribe();
+    } else {
+        router.push('/login');
+        setAuthLoading(false);
+    }
+  }, [router]);
 
   // Load character data statically instead of fetching from API
   useEffect(() => {
@@ -165,14 +184,12 @@ export default function StudyPage() {
     if (authLoading) {
       return; 
     }
-    if (!user) {
-      router.push('/login');
-      return;
+    if (user) {
+      getUserProfile(user.uid, user.displayName, user.email);
     }
-    getUserProfile(user.uid, user.displayName, user.email);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, authLoading, router]);
+  }, [user, authLoading]);
   
   useEffect(() => {
     if (user && innovatecUser) {

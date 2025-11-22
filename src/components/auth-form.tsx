@@ -87,23 +87,10 @@ export function AuthForm({ mode }: AuthFormProps) {
       router.push('/study');
     } catch (error: any) {
         console.error("Google Sign-In Popup Error:", error);
-        let description = 'No se pudo completar el inicio de sesión con Google.';
-        if (error.code === 'auth/popup-closed-by-user') {
-            description = 'Has cerrado la ventana de inicio de sesión. Inténtalo de nuevo.';
-        } else if (error.code === 'auth/cancelled-popup-request') {
-            description = 'Se ha cancelado la solicitud. Por favor, solo ten una ventana de inicio de sesión abierta.';
-        } else if (error.code === 'auth/invalid-continue-uri') {
-            description = 'La configuración de dominios no es correcta. Contacta a soporte.';
-        } else if (error.code === 'auth/api-key-not-valid') {
-            description = 'La clave de API de Firebase no es válida. Revisa la configuración.';
-        } else if (error.code === 'auth/configuration-not-found') {
-            description = 'La configuración de Firebase no se encontró. Revisa la inicialización.';
-        }
-        
         toast({
             variant: 'destructive',
             title: 'Error con Google',
-            description: description,
+            description: error.message || 'No se pudo completar el inicio de sesión con Google.',
         });
     } finally {
         setLoading(false);

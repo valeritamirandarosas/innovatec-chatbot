@@ -10,11 +10,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from './ui/button';
-import { useAuth } from '@/firebase/client-provider';
 import { LogOut } from 'lucide-react';
+import { signOut, User } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 
-export function UserButton() {
-  const { user, logout } = useAuth();
+export function UserButton({ user }: { user: User }) {
+  const router = useRouter();
+
+  const logout = async () => {
+    await signOut(auth);
+    router.push('/login');
+  };
 
   if (!user) return null;
 

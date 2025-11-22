@@ -21,12 +21,13 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Input } from '../ui/input';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { useAuth } from '@/firebase/client-provider';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 const feedbackSchema = z.object({
   email: z.string().email({ message: 'Email no válido.' }).optional().or(z.literal('')),
@@ -37,7 +38,16 @@ const feedbackSchema = z.object({
 export function Feedback() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (auth) {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setUser(user);
+      });
+      return () => unsubscribe();
+    }
+  }, []);
 
   const form = useForm<z.infer<typeof feedbackSchema>>({
     resolver: zodResolver(feedbackSchema),

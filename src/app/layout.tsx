@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
 import { useEffect } from 'react';
-import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -32,13 +31,11 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        <FirebaseClientProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-          </div>
-          <Toaster />
-        </FirebaseClientProvider>
+        <div className="relative flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+        </div>
+        <Toaster />
       </body>
     </html>
   );

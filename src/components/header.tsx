@@ -3,11 +3,27 @@
 import Link from 'next/link';
 import { Logo } from './logo';
 import { UserButton } from './user-button';
-import { useAuth } from '@/firebase/client-provider';
 import { Button } from './ui/button';
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 export function Header() {
-  const { user, loading } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (auth) {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setUser(user);
+        setLoading(false);
+      });
+      return () => unsubscribe();
+    } else {
+        setLoading(false);
+    }
+  }, []);
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,7 +39,7 @@ export function Header() {
             {!loading && (
               <>
                 {user ? (
-                  <UserButton />
+                  <UserButton user={user} />
                 ) : (
                   <>
                     <Button variant="ghost" asChild>

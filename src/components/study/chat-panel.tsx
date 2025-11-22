@@ -15,10 +15,11 @@ import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useAuth } from '@/firebase/client-provider';
 import type { Mode, InnovatecTutor } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useTTS } from '@/hooks/use-tts';
+import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -48,13 +49,22 @@ const ChatPanelComponent = forwardRef<ChatPanelRef, ChatPanelProps>(({
   grade,
   aiModel,
 }, ref) => {
-  const { user } = useAuth();
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { isSpeaking, speak, stop } = useTTS();
+
+  useEffect(() => {
+    if (auth) {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setUser(user);
+      });
+      return () => unsubscribe();
+    }
+  }, []);
 
   useEffect(() => {
     if (character?.greeting) {

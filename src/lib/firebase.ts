@@ -12,14 +12,25 @@ const firebaseConfig = {
   appId: "1:1048372229577:web:570303f90a2b52ae06a418"
 };
 
-// Inicialización idempotente de la app de Firebase
-const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth: Auth = getAuth(app);
 
-// Inicialización de Firestore con caché persistente
-const db: Firestore = initializeFirestore(app, {
-  localCache: persistentLocalCache({ cacheSizeBytes: CACHE_SIZE_UNLIMITED }),
-});
+// Inicialización idempotente de la app de Firebase
+let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
+
+if (typeof window !== 'undefined') {
+    app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = initializeFirestore(app, {
+        localCache: persistentLocalCache({ cacheSizeBytes: CACHE_SIZE_UNLIMITED }),
+    });
+} else {
+    // Proporcionar stubs o versiones nulas para el lado del servidor si es necesario
+    app = null as any;
+    auth = null as any;
+    db = null as any;
+}
+
 
 // Exportaciones centralizadas de las instancias de Firebase
 export { app, auth, db };
