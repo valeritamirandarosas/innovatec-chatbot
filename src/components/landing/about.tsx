@@ -35,9 +35,19 @@ const teamMembers: {
     image: '/images/fernanda.jpg',
   },
   {
-    name: 'Esperanza',
+    name: 'Esperanza Dekeyser',
     role: 'Creadora',
     image: '/images/esperanza.jpg',
+  },
+  {
+    name: 'Cristian Junco',
+    role: 'Creador',
+    image: '/images/cristian.jpg',
+  },
+  {
+    name: 'Valeria Miranda',
+    role: 'Creadora',
+    image: '/images/valeria.jpg',
   },
 ];
 
@@ -64,7 +74,7 @@ export function About() {
         ></iframe>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+      <div className="grid gap-8 md:grid-cols-5 max-w-5xl mx-auto">
         {teamMembers.map((member, index) => (
           <Card key={index} className="text-center overflow-hidden">
             <CardContent className="p-0 flex flex-col h-full">
