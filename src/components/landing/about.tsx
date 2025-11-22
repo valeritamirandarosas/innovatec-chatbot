@@ -3,10 +3,23 @@
 
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { PlayCircle } from 'lucide-react';
+import { Card, CardContent } from '../ui/card';
+import React from 'react';
 
-const videoPlaceholder = PlaceHolderImages.find(p => p.id === 'video-thumbnail');
+// Componente de video memoizado para evitar re-renderizaciones
+const MemoizedVideo = React.memo(({ src }: { src: string }) => (
+  <div className="relative w-full h-full flex-grow overflow-hidden rounded-t-lg">
+    <iframe
+      className="absolute top-1/2 left-1/2 w-full h-[177.77%] transform -translate-x-1/2 -translate-y-1/2 scale-[1.5]"
+      src={src}
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    ></iframe>
+  </div>
+));
+MemoizedVideo.displayName = 'MemoizedVideo';
+
 const teamMembers = [
   {
     name: 'Andrés Berríos',
@@ -54,15 +67,7 @@ export function About() {
           <Card key={index} className="text-center overflow-hidden">
             <CardContent className="p-0 flex flex-col h-full">
               {member.videoUrl ? (
-                <div className="relative w-full h-full flex-grow overflow-hidden rounded-t-lg">
-                  <iframe
-                    className="absolute top-1/2 left-1/2 w-full h-[177.77%] transform -translate-x-1/2 -translate-y-1/2 scale-[1.5]"
-                    src={member.videoUrl}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
+                <MemoizedVideo src={member.videoUrl} />
               ) : member.image && (
                 <div className="flex justify-center pt-6">
                    <Image
