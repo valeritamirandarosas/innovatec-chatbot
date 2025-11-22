@@ -1,6 +1,6 @@
 'use client';
 
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { PlaceHolderImages, type ImagePlaceholder } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import { Card, CardContent } from '../ui/card';
 import React from 'react';
@@ -19,7 +19,17 @@ const MemoizedVideo = React.memo(({ src }: { src: string }) => (
 ));
 MemoizedVideo.displayName = 'MemoizedVideo';
 
-const teamMembers = [
+const teamMembers: ({
+  name: string;
+  role: string;
+  image: ImagePlaceholder | undefined;
+  videoUrl?: undefined;
+} | {
+  name: string;
+  role: string;
+  videoUrl: string;
+  image?: undefined;
+})[] = [
   {
     name: 'Andrés Berríos',
     role: 'Creador',
@@ -75,11 +85,6 @@ export function About() {
               <div className="p-6 flex-shrink-0">
                 <h3 className="text-lg font-semibold">{member.name}</h3>
                 <p className="text-sm text-primary">{member.role}</p>
-                {member.quote && (
-                    <p className="mt-2 text-muted-foreground italic">
-                        &ldquo;{member.quote}&rdquo;
-                    </p>
-                )}
               </div>
             </CardContent>
           </Card>
