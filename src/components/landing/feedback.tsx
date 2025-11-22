@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,7 +26,7 @@ import { Loader2 } from 'lucide-react';
 import { Input } from '../ui/input';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { useAuth } from '../auth-context';
+import { useAuth } from '@/firebase/client-provider';
 
 const feedbackSchema = z.object({
   email: z.string().email({ message: 'Email no válido.' }).optional().or(z.literal('')),

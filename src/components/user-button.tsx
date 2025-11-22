@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from './ui/button';
-import { useAuth } from './auth-context';
+import { useAuth } from '@/firebase/client-provider';
 import { LogOut } from 'lucide-react';
 
 export function UserButton() {

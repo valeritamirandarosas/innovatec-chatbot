@@ -1,11 +1,10 @@
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { SetupPanel } from '@/components/study/setup-panel';
 import { StatsPanel } from '@/components/study/stats-panel';
 import { ChatPanel, type ChatPanelRef } from '@/components/study/chat-panel';
-import { useAuth } from '@/components/auth-context';
+import { useAuth } from '@/firebase/client-provider';
 import type { Bundle, Character, Mode, InnovatecUser, InnovatecTutor } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, AtomIcon } from 'lucide-react';

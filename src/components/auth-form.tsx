@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -95,6 +94,10 @@ export function AuthForm({ mode }: AuthFormProps) {
             description = 'Se ha cancelado la solicitud. Por favor, solo ten una ventana de inicio de sesión abierta.';
         } else if (error.code === 'auth/invalid-continue-uri') {
             description = 'La configuración de dominios no es correcta. Contacta a soporte.';
+        } else if (error.code === 'auth/api-key-not-valid') {
+            description = 'La clave de API de Firebase no es válida. Revisa la configuración.';
+        } else if (error.code === 'auth/configuration-not-found') {
+            description = 'La configuración de Firebase no se encontró. Revisa la inicialización.';
         }
         
         toast({

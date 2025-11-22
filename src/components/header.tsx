@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Logo } from './logo';
 import { UserButton } from './user-button';
-import { useAuth } from './auth-context';
+import { useAuth } from '@/firebase/client-provider';
 import { Button } from './ui/button';
 
 export function Header() {

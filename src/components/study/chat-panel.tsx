@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
@@ -16,7 +15,7 @@ import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useAuth } from '../auth-context';
+import { useAuth } from '@/firebase/client-provider';
 import type { Mode, InnovatecTutor } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useTTS } from '@/hooks/use-tts';
