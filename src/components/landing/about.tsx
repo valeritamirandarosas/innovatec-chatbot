@@ -1,4 +1,3 @@
-
 'use client';
 
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -24,18 +23,12 @@ const teamMembers = [
   {
     name: 'Andrés Berríos',
     role: 'Creador',
-    videoUrl: 'https://www.youtube.com/embed/OiYKfTeUwW0?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=OiYKfTeUwW0&controls=0&showinfo=0'
+    image: PlaceHolderImages.find(p => p.id === 'andres-berrios'),
   },
   {
     name: 'Fernanda Peducase',
     role: 'Creadora',
     videoUrl: 'https://www.youtube.com/embed/fpyD2YJTIwE?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=fpyD2YJTIwE&controls=0&showinfo=0',
-  },
-  {
-    name: 'Sofia Mendoza',
-    role: 'Diseñadora de Experiencias',
-    quote: 'La mejor interfaz es la que no se nota, solo se siente.',
-    image: PlaceHolderImages.find(p => p.id === 'team-member-3'),
   },
 ];
 
@@ -62,21 +55,20 @@ export function About() {
         ></iframe>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+      <div className="grid gap-8 md:grid-cols-2 max-w-3xl mx-auto">
         {teamMembers.map((member, index) => (
           <Card key={index} className="text-center overflow-hidden">
             <CardContent className="p-0 flex flex-col h-full">
               {member.videoUrl ? (
                 <MemoizedVideo src={member.videoUrl} />
               ) : member.image && (
-                <div className="flex justify-center pt-6">
+                <div className="relative w-full aspect-square">
                    <Image
                       src={member.image.imageUrl}
                       alt={`Foto de ${member.name}`}
                       data-ai-hint={member.image.imageHint}
-                      width={120}
-                      height={120}
-                      className="mx-auto mb-4 rounded-full"
+                      fill
+                      className="object-cover"
                    />
                 </div>
               )}
