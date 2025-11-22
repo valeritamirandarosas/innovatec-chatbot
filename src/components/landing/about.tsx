@@ -22,7 +22,7 @@ MemoizedVideo.displayName = 'MemoizedVideo';
 const teamMembers: ({
   name: string;
   role: string;
-  image: ImagePlaceholder | undefined;
+  image: string;
   videoUrl?: undefined;
 } | {
   name: string;
@@ -33,7 +33,7 @@ const teamMembers: ({
   {
     name: 'Andrés Berríos',
     role: 'Creador',
-    image: PlaceHolderImages.find(p => p.id === 'andres-berrios'),
+    image: '/images/andres.jpg',
   },
   {
     name: 'Fernanda Peducase',
@@ -74,9 +74,8 @@ export function About() {
               ) : member.image && (
                 <div className="relative w-full aspect-square">
                    <Image
-                      src={member.image.imageUrl}
+                      src={member.image}
                       alt={`Foto de ${member.name}`}
-                      data-ai-hint={member.image.imageHint}
                       fill
                       className="object-cover"
                    />
