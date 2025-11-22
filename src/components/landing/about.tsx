@@ -19,17 +19,11 @@ const MemoizedVideo = React.memo(({ src }: { src: string }) => (
 ));
 MemoizedVideo.displayName = 'MemoizedVideo';
 
-const teamMembers: ({
+const teamMembers: {
   name: string;
   role: string;
   image: string;
-  videoUrl?: undefined;
-} | {
-  name: string;
-  role: string;
-  videoUrl: string;
-  image?: undefined;
-})[] = [
+}[] = [
   {
     name: 'Andrés Berríos',
     role: 'Creador',
@@ -38,7 +32,12 @@ const teamMembers: ({
   {
     name: 'Fernanda Peducase',
     role: 'Creadora',
-    videoUrl: 'https://www.youtube.com/embed/fpyD2YJTIwE?autoplay=1&loop=1&mute=1&playsinline=1&rel=0&playlist=fpyD2YJTIwE&controls=0&showinfo=0',
+    image: '/images/fernanda.jpg',
+  },
+  {
+    name: 'Esperanza',
+    role: 'Creadora',
+    image: '/images/esperanza.jpg',
   },
 ];
 
@@ -65,22 +64,18 @@ export function About() {
         ></iframe>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2 max-w-3xl mx-auto">
+      <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
         {teamMembers.map((member, index) => (
           <Card key={index} className="text-center overflow-hidden">
             <CardContent className="p-0 flex flex-col h-full">
-              {member.videoUrl ? (
-                <MemoizedVideo src={member.videoUrl} />
-              ) : member.image && (
-                <div className="relative w-full aspect-square">
-                   <Image
-                      src={member.image}
-                      alt={`Foto de ${member.name}`}
-                      fill
-                      className="object-cover"
-                   />
-                </div>
-              )}
+              <div className="relative w-full aspect-square">
+                 <Image
+                    src={member.image}
+                    alt={`Foto de ${member.name}`}
+                    fill
+                    className="object-cover"
+                 />
+              </div>
               <div className="p-6 flex-shrink-0">
                 <h3 className="text-lg font-semibold">{member.name}</h3>
                 <p className="text-sm text-primary">{member.role}</p>
