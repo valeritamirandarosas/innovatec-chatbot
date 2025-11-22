@@ -1,42 +1,180 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isOwner(uid) {
-      return request.auth != null && request.auth.uid == uid;
+    /**
+     * Core Philosophy: This ruleset enforces a strict user-ownership model. 
+     * All user-generated data (profiles, sessions, messages, bundles) is 
+     * accessible only by the user who created it. The single exception is the 
+     * 'feedback' collection, which allows public, anonymous creation to 
+     * facilitate easy submission.
+     *
+     * Data Structure: Data is organized into two main patterns:
+     * 1. User-Scoped Collections: Data directly related to a user is nested 
+     *    under their document (e.g., /users/{userId}/bundles/{bundleId}). 
+     *    This provides clear, path-based ownership.
+     * 2. Top-Level Collections: Collections like 'sessions' and 'feedback' 
+     *    are at the root. Security is maintained by denormalizing an `ownerId` 
+     *    (e.g., 'userId') field onto every document, which is then checked 
+     *    against the authenticated user's ID.
+     *
+     * Key Security Decisions:
+     * - User Enumeration is Disallowed: Listing the top-level '/users' 
+     *   collection is forbidden to protect user privacy.
+     * - Authorization Independence: Rules rely on data within the document 
+     *   being evaluated (or its direct parent) rather than performing costly 
+     *   and complex cross-collection `get()` calls. This is achieved by 
+     *   denormalizing owner IDs.
+     * - Secure Queries: Listing documents from top-level collections 
+     *   (like '/sessions') is disabled by default. This is because security 
+     *   rules cannot inspect query 'where' clauses, making it impossible to 
+     *   guarantee that a user is only requesting their own documents. The 
+     *   recommended approach is to nest this data (e.g., move 'sessions' to 
+     *   '/users/{userId}/sessions/{sessionId}').
+     * - Immutable Ownership: Once a document is created, its ownership fields 
+     *   (e.g., 'userId') are made immutable to prevent documents from being 
+     *   re-assigned to other users.
+     */
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    match /users/{uid} {
-      // Allow any authenticated user to read user data for the leaderboard.
-      allow read: if request.auth != null;
-      // Allow owners to write to their own document.
-      allow write: if isOwner(uid);
+    /**
+     * Checks if the currently authenticated user's UID matches the provided userId.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
     }
 
-    match /sessions/{sid} {
-      // Allow owners to read and write their own session data.
-      allow read, write: if isOwner(get(/databases/$(database)/documents/sessions/$(sid)).data.uid);
+    /**
+     * Checks for ownership on an existing document. Used for update/delete.
+     * This prevents changing or deleting documents that do not exist.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
     }
     
-    match /sessions/{sid}/messages/{mid} {
-      // Allow owners to read and write messages within their own sessions.
-      allow read, write: if isOwner(get(/databases/$(database)/documents/sessions/$(sid)).data.uid);
+    /**
+     * Checks if the current user is the owner of the parent Session document.
+     * Uses a 'get()' call, which is acceptable for checking parent permissions.
+     */
+    function isSessionOwner(sessionId) {
+      let sessionData = get(/databases/$(database)/documents/sessions/$(sessionId)).data;
+      return isSignedIn() && request.auth.uid == sessionData.userId;
     }
 
-    match /users/{uid}/bundles/{bid} {
-      // Allow owners to read and write their own learning bundles.
-      allow read, write: if isOwner(uid);
+    /**
+     * Validates that the creatorId field is being set correctly on creation.
+     */
+    function isCorrectCreator(field) {
+      return isSignedIn() && request.resource.data[field] == request.auth.uid;
     }
 
-    match /feedback/{id} {
-      // Anyone can submit feedback.
-      allow create: if true;
-      // Only authenticated users can read/update/delete feedback (for admin roles, in a real app).
-      allow read, update, delete: if request.auth != null;
+    /**
+     * Validates that a field is immutable on update.
+     */
+    function isImmutable(field) {
+      return request.resource.data[field] == resource.data[field];
+    }
+    
+    /**
+     * Validates feedback creation. Allows anonymous creation (userId is null)
+     * or authenticated creation where the userId matches the user's UID.
+     */
+    function canCreateFeedback() {
+      let incomingData = request.resource.data;
+      return incomingData.userId == null || isCorrectCreator('userId');
     }
 
-    // Server-side actions (like getLeaderboard) will use admin SDKs and bypass these rules.
-    // No explicit rule for leaderboard reads is needed on the client if it's handled server-side.
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Manages user profile documents.
+     * @path /users/{userId}
+     * @allow (create) An authenticated user creating their own user document.
+     * @deny (get) A user trying to read another user's profile.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && isImmutable('id');
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Manages learning bundles owned by a user.
+       * @path /users/{userId}/bundles/{bundleId}
+       * @allow (create) A user creating a bundle under their own profile.
+       * @deny (list) A user trying to list bundles belonging to another user.
+       * @principle Enforces strict ownership via path nesting.
+       */
+      match /bundles/{bundleId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && isImmutable('userId');
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description Manages user study sessions.
+     * @path /sessions/{sessionId}
+     * @allow (create) An authenticated user creating a session for themselves.
+     * @deny (get) A user trying to read a session belonging to another user.
+     * @principle Enforces document ownership for all operations via a denormalized 'userId' field.
+     */
+    match /sessions/{sessionId} {
+      allow get: if isOwner(resource.data.userId);
+      // CRITICAL: Listing a top-level collection containing private user data is insecure
+      // because rules cannot enforce query filters (e.g., where('userId', '==', auth.uid)).
+      // To enable secure listing, move this collection under the user's path:
+      // e.g., /users/{userId}/sessions/{sessionId}
+      allow list: if false; // TODO: Restructure data for secure client-side listing.
+      allow create: if isCorrectCreator('userId');
+      allow update: if isExistingOwner(resource.data.userId) && isImmutable('userId');
+      allow delete: if isExistingOwner(resource.data.userId);
+
+      /**
+       * @description Manages messages within a study session.
+       * @path /sessions/{sessionId}/messages/{messageId}
+       * @allow (list) A user listing messages within their own session.
+       * @deny (create) A user trying to add a message to someone else's session.
+       * @principle Inherits ownership from the parent session document.
+       */
+      match /messages/{messageId} {
+        allow get: if isSessionOwner(sessionId);
+        allow list: if isSessionOwner(sessionId);
+        allow create: if isSessionOwner(sessionId);
+        allow update: if isSessionOwner(sessionId) && resource != null;
+        allow delete: if isSessionOwner(sessionId) && resource != null;
+      }
+    }
+    
+    /**
+     * @description Manages user-submitted feedback.
+     * @path /feedback/{feedbackId}
+     * @allow (create) Any user, including anonymous users, can submit feedback.
+     * @deny (get) A user trying to read feedback submitted by another user.
+     * @principle Allows public creation but restricts all other access to the original author.
+     */
+    match /feedback/{feedbackId} {
+      allow get: if isOwner(resource.data.userId);
+      allow list: if false;
+      allow create: if canCreateFeedback();
+      allow update: if isExistingOwner(resource.data.userId) && isImmutable('userId');
+      allow delete: if isExistingOwner(resource.data.userId);
+    }
   }
 }

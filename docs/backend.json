@@ -1,0 +1,357 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user within the Innovatec Chatbot application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user entity."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "alias": {
+          "type": "string",
+          "description": "The user's chosen alias or nickname."
+        },
+        "lastActive": {
+          "type": "string",
+          "description": "Timestamp of the user's last activity.",
+          "format": "date-time"
+        },
+        "streak": {
+          "type": "number",
+          "description": "The user's current streak of consecutive active days."
+        },
+        "minutesStudied": {
+          "type": "number",
+          "description": "Total minutes the user has spent studying."
+        },
+        "quizzesPassed": {
+          "type": "number",
+          "description": "Number of quizzes the user has successfully passed."
+        },
+        "score": {
+          "type": "number",
+          "description": "The user's overall score in the application."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the user account was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of when the user account was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "displayName",
+        "email",
+        "alias",
+        "lastActive",
+        "streak",
+        "minutesStudied",
+        "quizzesPassed",
+        "score",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Session": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Session",
+      "type": "object",
+      "description": "Represents a study session within the Innovatec Chatbot application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the session entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Session)"
+        },
+        "character": {
+          "type": "string",
+          "description": "The character selected for the session (e.g., goku, bulma)."
+        },
+        "mode": {
+          "type": "string",
+          "description": "The mode of the session (e.g., dudas, plan)."
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject of the session."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the session was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "character",
+        "mode",
+        "subject",
+        "createdAt"
+      ]
+    },
+    "Message": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Message",
+      "type": "object",
+      "description": "Represents a message within a study session.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the message entity."
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Reference to Session. (Relationship: Session 1:N Message)"
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the message sender (user or assistant)."
+        },
+        "content": {
+          "type": "string",
+          "description": "The content of the message."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the message was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "sessionId",
+        "role",
+        "content",
+        "createdAt"
+      ]
+    },
+    "Bundle": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Bundle",
+      "type": "object",
+      "description": "Represents a learning bundle created for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the bundle entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Bundle)"
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject of the bundle."
+        },
+        "grade": {
+          "type": "number",
+          "description": "The grade level for the bundle."
+        },
+        "character": {
+          "type": "string",
+          "description": "The character associated with the bundle."
+        },
+        "plan": {
+          "type": "array",
+          "description": "An array of learning plan steps.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "quiz": {
+          "type": "string",
+          "description": "The quiz associated with the bundle (JSON string)."
+        },
+        "flashcards": {
+          "type": "array",
+          "description": "An array of flashcards.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the bundle was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "subject",
+        "grade",
+        "character",
+        "plan",
+        "quiz",
+        "flashcards",
+        "createdAt"
+      ]
+    },
+    "Feedback": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Feedback",
+      "type": "object",
+      "description": "Represents user feedback submitted through the application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the feedback entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Feedback).  Optional as feedback can be submitted anonymously.",
+          "format": "string"
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address (optional).",
+          "format": "email"
+        },
+        "message": {
+          "type": "string",
+          "description": "The feedback message submitted by the user."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the feedback."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the feedback was submitted.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the feedback (e.g., new, done)."
+        }
+      },
+      "required": [
+        "id",
+        "message",
+        "category",
+        "createdAt",
+        "status"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles.  Access is owner-only, based on the 'userId' parameter.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/sessions/{sessionId}",
+        "definition": {
+          "entityName": "Session",
+          "schema": {
+            "$ref": "#/backend/entities/Session"
+          },
+          "description": "Stores user sessions. Includes denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "sessionId",
+              "description": "The unique identifier for the session."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/sessions/{sessionId}/messages/{messageId}",
+        "definition": {
+          "entityName": "Message",
+          "schema": {
+            "$ref": "#/backend/entities/Message"
+          },
+          "description": "Stores messages for each session. Includes denormalized 'userId' from the parent 'session' document for authorization independence.",
+          "params": [
+            {
+              "name": "sessionId",
+              "description": "The unique identifier for the session."
+            },
+            {
+              "name": "messageId",
+              "description": "The unique identifier for the message."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/bundles/{bundleId}",
+        "definition": {
+          "entityName": "Bundle",
+          "schema": {
+            "$ref": "#/backend/entities/Bundle"
+          },
+          "description": "Stores learning bundles created for a user. Access is owner-only, based on the 'userId' parameter.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "bundleId",
+              "description": "The unique identifier for the bundle."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/feedback/{feedbackId}",
+        "definition": {
+          "entityName": "Feedback",
+          "schema": {
+            "$ref": "#/backend/entities/Feedback"
+          },
+          "description": "Stores user feedback.  Create access is public, while read/update/delete require authentication.",
+          "params": [
+            {
+              "name": "feedbackId",
+              "description": "The unique identifier for the feedback."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to ensure security, scalability, and ease of debugging, following the principles of Authorization Independence, Clarity of Intent, DBAC, and QAPs. Authorization independence is achieved through path-based ownership and denormalization, eliminating the need for `get()` calls in security rules.\n\n1.  **Users (Private Data):** The `/users/{userId}` collection stores user profiles. Access is restricted to the user themselves using path-based ownership. This structure provides clear ownership and simplifies security rules, and it is very secure and efficient.\n\n2.  **Sessions (User-Owned Data):** The `/sessions/{sessionId}` collection stores the session. Every session includes the `userId`. The `userId` is also present on the messages subcollection. Using this approach, we can guarantee authorization independence.\n\n3.  **Messages (Nested Data):** The `/sessions/{sessionId}/messages/{messageId}` subcollection stores messages for each session. These messages are tied to a specific session and inherit the security context of the session. The `userId` is present on both the session and the message, to ensure authorization independence.\n\n4.  **Bundles (User-Owned Data):** The `/users/{userId}/bundles/{bundleId}` collection stores the bundles. Access is restricted to the user themselves using path-based ownership. This structure provides clear ownership and simplifies security rules, and it is very secure and efficient.\n\n5.  **Feedback (Public Create, Restricted Access):** The `/feedback/{feedbackId}` collection allows for public creation of feedback documents, while read, update, and delete operations are restricted to authenticated users. This setup facilitates open feedback submission while maintaining control over data modification. The absence of hierarchical dependencies ensures efficient and secure operations.\n\nThis structure allows for secure `list` operations (QAPs) by segregating data based on access requirements and utilizing path-based ownership for private data. By avoiding hierarchical authorization dependencies, the structure supports atomic operations and simplifies debugging, aligning with the core design principles."
+  }
+}
